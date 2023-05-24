@@ -1,0 +1,8 @@
+First run:
+		Detect roms folder
+			if they not exist perform first run.
+		    first run ask wich systems to create folders
+-----------------------------------------------------------------
+gamepad conection/disconection
+gamepad name display at run
+gamepad key config 
