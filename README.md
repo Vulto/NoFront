@@ -11,7 +11,7 @@ No Front Menu is a simple program written in C that allows you to browse and lau
 
 ## Requirements
 
-To compile and run the ROM Menu program, you need to have the following dependencies installed:
+To compile and run the NoFront program, you need to have the following dependencies installed:
 
 - C Compiler (e.g., GCC)
 - Ncurses library
@@ -20,8 +20,8 @@ To compile and run the ROM Menu program, you need to have the following dependen
 ## Compilation
 
 1. Clone the repository:
-$ git clone https://github.com/your-username/rom-menu.git
-$ cd rom-menu
+$ git clone https://github.com/your-username/Nofront.git
+$ cd NoFront
 
 
 2. Compile the source code:
@@ -34,13 +34,14 @@ $ ./c
 1. Run the compiled executable:
 $ ./nf
 
-2. The ROM Menu will be displayed, showing the available ROMs for the selected console.
+2. No Front will be displayed, showing the available ROMs for the selected console.
 
 3. Use the arrow keys or D-pad to navigate through the ROM list.
 
 4. Press Enter or the gamepad button to launch the selected ROM using the Mednafen emulator.
 
 5. Use the left and right arrow keys or gamepad buttons to switch between different gaming consoles.
+   (If gamepad is connected, NoFront ignore keyboard inputs, except bash key combinations).
 
 6. Press 'q' to exit the ROM Menu.
 
@@ -48,6 +49,8 @@ $ ./nf
 
 - To add or modify ROMs for each gaming console, update the ROM directory paths in the `main.h` file (`RomsDir` array).
 - You can customize the supported gaming consoles and their names by modifying the `Console` array in the `main.h` file.
+
+
 
 ## License
 
