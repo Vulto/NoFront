@@ -13,8 +13,8 @@
 #define MAX_ROMS 100
 
 static const char *RomsDir[] = {
-"/home/vulto/gm/menu/roms/nes/", 
-"/home/vulto/gm/menu/roms/snes/" 
+"/home/USER/gm/nf/roms/nes/", 
+"/home/USER/gm/nf/roms/snes/" 
 };
 
 static const char *Console[] = {
