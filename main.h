@@ -10,33 +10,38 @@
 #define MAX_EVENT_ID 25
 #define BUFFER_SIZE 128
 
+// Make it statically defined to avoid unnecessary memory management.
 #define MAX_ROMS 100
 
+//Change USER to yours
 static const char *RomsDir[] = {
-"/home/USER/gm/nf/roms/nes/", 
-"/home/USER/gm/nf/roms/snes/" 
+	"/home/USER/gm/NoFront/roms/nes/", 
+	"/home/USER/gm/NoFront/roms/snes/" 
 };
 
 static const char *Console[] = {
-"Nintendo",
-"Super Nintendo",
-"Nintendo 64"
+	"Nintendo",
+	"Super Nintendo",
+	"Nintendo 64"
 };
 // To keep track of wich console is on the screen 
-unsigned short int idx = 1;
+unsigned short int idx = 0;
 
 char command[512];
 
 int is_valid_rom_name(const char* name) {
-	// Check if the filename ends with .smc
+	const char* extensions[] = {".smc", ".sfc", ".fig", ".swc", ".nes"};
+	int num_extensions = sizeof(extensions) / sizeof(extensions[0]);
+
 	int len = strlen(name);
-	if (strcmp(name + len - 4, ".smc") == 0 ||
-		strcmp(name + len - 4, ".sfc") == 0 ||
-		strcmp(name + len - 4, ".fig") == 0 ||
-		strcmp(name + len - 4, ".swc") == 0 ||
-		strcmp(name + len - 4, ".nes") == 0) {
-		return EXIT_FAILURE;
+	const char* file_extension = name + len - 4;
+
+	for (int i = 0; i < num_extensions; i++) {
+		if (strcmp(file_extension, extensions[i]) == 0) {
+			return EXIT_FAILURE;
+		}
 	}
+
 	return EXIT_SUCCESS;
 }
 

@@ -9,6 +9,11 @@ No Front Menu is a simple program written in C that allows you to browse and lau
 - Allows navigation through the ROM list using arrow keys or a gamepad (D-pad).
 - Launches selected ROMs using the Mednafen emulator.
 
+## Big thanks to Alexey Kuterpov (Tsoding) for develop Nobuild header
+ Alexey Kutepov <reximkut@gmail.com>
+ http://github.com/tsoding/nobuild
+
+
 ## Requirements
 
 To compile and run the NoFront program, you need to have the following dependencies installed:
