@@ -1,4 +1,5 @@
 #include "main.h"
+#include "firstrun.h"
 
 int main() {
     initscr();
@@ -13,9 +14,11 @@ int main() {
     unsigned short int start_index = 0;
 
     int GamepadFd = open("/dev/input/js0", O_RDONLY);
-    if (GamepadFd == -1) {
-        perror("Could not open GamePad\n");
-    }
+	
+	const char path[] = "roms";
+	if (TestDir(path) == EXIT_FAILURE) {
+		FirstRun();
+	}	
 
     // Initiate GamePad input tracking
     struct js_event event;
@@ -39,12 +42,11 @@ int main() {
 			if(highlight > num_roms) {
 				highlight = num_roms;
 			}
-
             if (rom_index == highlight - 1) {
                 attron(A_BOLD);
             }
             if (rom_index < num_roms) {
-                mvprintw(i + 1, 0, "%s", game_names[rom_index]);
+                mvprintw(i + 1, 0, " %s ", game_names[rom_index]);
             }
             attroff(A_BOLD);
         }
@@ -70,7 +72,7 @@ int main() {
                         case 6: // X AXIS
                             if (event.value < 0) {
 								// Changing system with Left 
-                                if (idx > 0) {
+                                if (idx > MinConsoles) {
                                     idx--;
 									start_index = 0; // reset scroll to avoid blank menu
 									highlight = 1; // highlight the first option
@@ -78,7 +80,7 @@ int main() {
                                 break;
                             }
                             if (event.value > 0) {
-                                if (idx < 2) {
+                                if (idx < MaxConsoles) {
                                     idx++;
 									start_index = 0; // reset scroll to avoid blank menu
 									highlight = 1; // highlight the first option
@@ -92,7 +94,7 @@ int main() {
 sprintf(command, "mednafen \"%s/%s\" >/dev/null 2>&1 &", RomsDir[idx], game_names[highlight - 1] + strlen(game_names[highlight - 1]) + 1);
 					system(command);
                         break;
-                    }
+					}
                 default:
                     break;
             }
@@ -126,7 +128,7 @@ sprintf(command, "mednafen \"%s/%s\" >/dev/null 2>&1 &", RomsDir[idx], game_name
                     break;
 
                 case KEY_LEFT:
-                    if (idx > 0) {
+                    if (idx > MinConsoles) {
                         idx--;
 						start_index = 0; // reset scroll to avoid blank menu
 						highlight = 1; // highlight the first option
@@ -134,7 +136,7 @@ sprintf(command, "mednafen \"%s/%s\" >/dev/null 2>&1 &", RomsDir[idx], game_name
                     break;
 
                 case KEY_RIGHT:
-                    if (idx < 2) {
+                    if (idx < MaxConsoles) {
                         idx++;
 						start_index = 0; // reset scroll to avoid blank menu
 						highlight = 1; // highlight the first option

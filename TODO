@@ -1,0 +1,7 @@
+Put NoFront in background when launch emulators (Do not accept inputs)
+
+Move command to main.h
+
+Simplify functions from main.h
+
+Add support to any emulators generalizing [command]
