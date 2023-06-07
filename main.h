@@ -6,33 +6,18 @@
 #include <ncurses.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/stat.h>
+
+#include "config.h"
 
 #define MAX_EVENT_ID 25
 #define BUFFER_SIZE 128
 
-// Make it statically defined to avoid unnecessary memory management.
-#define MAX_ROMS 100
-
-//Change USER to yours
-static const char *RomsDir[] = {
-	"/home/USER/gm/NoFront/roms/nes/", 
-	"/home/USER/gm/NoFront/roms/snes/" 
-};
-
-static const char *Console[] = {
-	"Nintendo",
-	"Super Nintendo",
-	"Nintendo 64"
-};
-// To keep track of wich console is on the screen 
-unsigned short int idx = 0;
 
 char command[512];
 
 int is_valid_rom_name(const char* name) {
-	const char* extensions[] = {".smc", ".sfc", ".fig", ".swc", ".nes"};
 	int num_extensions = sizeof(extensions) / sizeof(extensions[0]);
-
 	int len = strlen(name);
 	const char* file_extension = name + len - 4;
 
@@ -45,7 +30,7 @@ int is_valid_rom_name(const char* name) {
 	return EXIT_SUCCESS;
 }
 
-void remove_strange_characters(char* name) {
+void FormatNames(char* name) {
 	// Look for patterns that aren't part of the official name
 	char* ptr = name;
 	while (*ptr) {
@@ -56,13 +41,13 @@ void remove_strange_characters(char* name) {
 		ptr++;
 	}
 }
-
 int get_game_names(char game_names[MAX_ROMS][256], unsigned short int idx) {
     // Open the ROM directory
     DIR *dir = opendir(RomsDir[idx]);
     if (!dir) {
-        fprintf(stderr, "Failed to open directory %s\n", RomsDir[idx]);
-        return 0;
+		perror("opendir");
+		endwin();
+        return EXIT_FAILURE;
     }
 
     // Store stripped and unstripped names of all valid ROMs in arrays
@@ -73,7 +58,7 @@ int get_game_names(char game_names[MAX_ROMS][256], unsigned short int idx) {
             // Remove strange characters from filename
             char stripped_name[256];
             strncpy(stripped_name, ent->d_name, 255);
-            remove_strange_characters(stripped_name);
+            FormatNames(stripped_name);
 
             // Copy stripped and unstripped names to game_names array
             strncpy(game_names[num_roms], stripped_name, 255);
