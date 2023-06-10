@@ -1,0 +1,10 @@
+# Ignore compiled files
+nf
+c
+*.o
+
+# Ignore log files
+*.log
+
+# Ignore a specific directory
+roms/
