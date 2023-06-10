@@ -1,6 +1,8 @@
 # Ignore compiled files
 *.o
 *.so
+c
+nf
 
 # Ignore log files
 *.log
