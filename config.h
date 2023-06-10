@@ -4,20 +4,22 @@
 static const char *RomsDir[] = {
 	"roms/nes",
 	"roms/snes",
-	"roms/n64",
+	"roms/ps1",
+	"roms/mega",
+	"roms/sat"
 };
 
-static const char *Emulators[] = {
-	"mednafen",
-	"mupen64",
-	"fbneo",
+static const char *Emulator[] = {
+	"mednafen"
 };
 
 //Menu titles
 static const char *Console[] = {
 	"Nintendo",
 	"Super Nintendo",
-	"Nintendo 64",
+	"Playstation 1",
+	"Megadrive",
+	"Saturn"
 };
 
 const char *extensions[] = {
@@ -28,12 +30,13 @@ const char *extensions[] = {
 	".nes", 
 	".z64", 
 	".n64", 
-	".zip"
+	".md",
+	".cue"
 };
 
 // Just adding some "readability"
 static unsigned short int MinConsoles = 0;
-static unsigned short int MaxConsoles = 2; // Start counting from 0, so 2 == 3
+static unsigned short int MaxConsoles = 4; // Start counting from 0, so 2 == 3
 
 // To keep track of wich console is on the screen 
 unsigned short int idx = 0;

@@ -1,7 +1,3 @@
 Put NoFront in background when launch emulators (Do not accept inputs)
-
-Move command to main.h
-
+Add support to any emulators refactoring run() (try to enumerate systems)
 Simplify functions from main.h
-
-Add support to any emulators generalizing [command]

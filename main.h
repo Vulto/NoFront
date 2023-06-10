@@ -13,8 +13,14 @@
 #define MAX_EVENT_ID 25
 #define BUFFER_SIZE 128
 
+unsigned short int highlight = 1; // The cursor
+unsigned short int start_index = 0; // This is were menu start to appear
+bool running = true;
+char game_names[MAX_ROMS][256];
 
 char command[512];
+
+bool gamepad;
 
 int is_valid_rom_name(const char* name) {
 	int num_extensions = sizeof(extensions) / sizeof(extensions[0]);
@@ -68,4 +74,9 @@ int get_game_names(char game_names[MAX_ROMS][256], unsigned short int idx) {
     }
     closedir(dir);
     return num_roms;
+}
+
+void run() {
+	sprintf(command, "%s \"%s/%s\" >/dev/null 2>&1 &",Emulator[0], RomsDir[idx], game_names[highlight - 1] + strlen(game_names[highlight - 1]) + 1);
+	system(command);
 }
