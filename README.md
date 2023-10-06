@@ -25,8 +25,8 @@ To compile and run the NoFront program, you need to have the following dependenc
 ## Compilation
 
 1. Clone the repository:
-$ git clone https://github.com/Vulto/Nofront.git 
-$ cd NoFront
+$ git clone "https://github.com/Vulto/Nofront.git"
+$ cd "NoFront"
 
 
 2. Compile the source code:
