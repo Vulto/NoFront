@@ -24,14 +24,14 @@ To compile and run the NoFront program, you need to have the following dependenc
 
 ## Compilation
 
-$ ./c
+./c
 
 Ensure that the Mednafen emulator is installed and accessible in your system's PATH.
 
 ## Usage
 
 1. Run the compiled executable:
-$ ./nf
+./nf
 
 2. No Front will be displayed, showing the available ROMs for the selected console.
 
