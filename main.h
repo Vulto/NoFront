@@ -22,13 +22,14 @@ char command[512];
 
 bool gamepad;
 
-int is_valid_rom_name(const char* name) {
-	int num_extensions = sizeof(extensions) / sizeof(extensions[0]);
+int num_extensions = sizeof(ext) / sizeof(ext[0]);
+
+int CheckExt(const char* name) {
 	int len = strlen(name);
 	const char* file_extension = name + len - 4;
 
 	for (int i = 0; i < num_extensions; i++) {
-		if (strcmp(file_extension, extensions[i]) == 0) {
+		if (strcmp(file_extension, ext[i]) == 0) {
 			return EXIT_FAILURE;
 		}
 	}
@@ -37,7 +38,6 @@ int is_valid_rom_name(const char* name) {
 }
 
 void FormatNames(char* name) {
-	// Look for patterns that aren't part of the official name
 	char* ptr = name;
 	while (*ptr) {
 		if (*ptr == '(' || *ptr == '[') {
@@ -47,28 +47,28 @@ void FormatNames(char* name) {
 		ptr++;
 	}
 }
-int get_game_names(char game_names[MAX_ROMS][256], unsigned short int idx) {
-    // Open the ROM directory
+
+int get_game_names() {
     DIR *dir = opendir(RomsDir[idx]);
     if (!dir) {
-		perror("opendir");
-		endwin();
+        perror("opendir");
+        endwin();
         return EXIT_FAILURE;
     }
 
     // Store stripped and unstripped names of all valid ROMs in arrays
     struct dirent *ent;
     int num_roms = 0;
+    char stripped_name[50];
     while ((ent = readdir(dir)) != NULL && num_roms < MAX_ROMS) {
-        if (is_valid_rom_name(ent->d_name)) {
+        if (CheckExt(ent->d_name)) {
             // Remove strange characters from filename
-            char stripped_name[256];
-            strncpy(stripped_name, ent->d_name, 255);
+            strncpy(stripped_name, ent->d_name, 50);
             FormatNames(stripped_name);
 
             // Copy stripped and unstripped names to game_names array
-            strncpy(game_names[num_roms], stripped_name, 255);
-            strncpy(game_names[num_roms] + strlen(stripped_name) + 1, ent->d_name, 255 - strlen(stripped_name) - 1);
+            strncpy(game_names[num_roms], stripped_name, 50);
+            strcpy(game_names[num_roms] + strlen(stripped_name) + 1, ent->d_name);
             num_roms++;
         }
     }
@@ -77,6 +77,6 @@ int get_game_names(char game_names[MAX_ROMS][256], unsigned short int idx) {
 }
 
 void run() {
-	sprintf(command, "%s \"%s/%s\" >/dev/null 2>&1 &",Emulator[0], RomsDir[idx], game_names[highlight - 1] + strlen(game_names[highlight - 1]) + 1);
+	sprintf(command, "%s \"%s/%s\" >/dev/null 2>&1 &","nopen", RomsDir[idx], game_names[highlight - 1] + strlen(game_names[highlight - 1]) + 1);
 	system(command);
 }

@@ -1,5 +1,5 @@
-// I decided to make it statically defined to avoid memory management.
-#define MAX_ROMS 100
+//Get rid of this macro. It sould be dynamic
+#define MAX_ROMS 1000
 
 static const char *RomsDir[] = {
 	"roms/nes",
@@ -9,9 +9,6 @@ static const char *RomsDir[] = {
 	"roms/sat"
 };
 
-static const char *Emulator[] = {
-	"mednafen"
-};
 
 //Menu titles
 static const char *Console[] = {
@@ -22,7 +19,7 @@ static const char *Console[] = {
 	"Saturn"
 };
 
-const char *extensions[] = {
+const char *ext[] = {
 	".smc",
 	".sfc",
 	".fig", 
@@ -34,9 +31,8 @@ const char *extensions[] = {
 	".cue"
 };
 
-// Just adding some "readability"
-static unsigned short int MinConsoles = 0;
-static unsigned short int MaxConsoles = 4; // Start counting from 0, so 2 == 3
+static int MinConsoles = 0;
+static int MaxConsoles = 4;
 
 // To keep track of wich console is on the screen 
 unsigned short int idx = 0;

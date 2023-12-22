@@ -8,7 +8,14 @@ int main() {
 	curs_set(0);
 
 	int GamepadFd = open("/dev/input/js0", O_RDONLY);
-	if(GamepadFd != 1) gamepad = true;
+
+	if(GamepadFd  != -1 ) {
+		gamepad = true;
+	} else {
+		gamepad = false;
+	}
+	// Initiate GamePad input tracking
+	struct js_event event;
 
 	const char path[] = "roms";
 	if (TestDir(path) == EXIT_FAILURE) {
@@ -18,20 +25,18 @@ int main() {
 	while (running) {
 		clear();
 
-		// Initiate GamePad input tracking
-		struct js_event event;
+		int num_roms = get_game_names();
 
 		attron(A_DIM);
 		mvprintw(0, (COLS - strlen(Console[idx])) / 2, "%s", Console[idx]);
 		attroff(A_DIM);
 
-		int num_roms = get_game_names(game_names, idx);
 
 		// Adjust the max displayable items based on the updated ROM count
-		unsigned short int max_displayable_items = num_roms > LINES - 2 ? LINES - 2 : num_roms;
+		int max_displayable_items = num_roms > LINES - 2 ? LINES - 2 : num_roms;
 
 		for (int i = 0; i < max_displayable_items; i++) {
-			unsigned short int rom_index = start_index + i;
+			int rom_index = start_index + i;
 
 			if(highlight > num_roms) {
 				highlight = num_roms;
@@ -87,9 +92,11 @@ int main() {
 				case JS_EVENT_BUTTON:
 					if (event.number == 4 && event.value == 1) {
 						run();
-						gamepad = false;
+						system(command);
 						break;
 					}
+				default:
+					break;
 			}
 		} else {
 			int c;
@@ -136,6 +143,9 @@ int main() {
 					break;
 
 				case 'q': // EXIT
+					running = false;
+					break;
+				default:
 					running = false;
 					break;
 			}

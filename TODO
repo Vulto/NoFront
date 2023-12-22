@@ -1,3 +1,10 @@
+Create Favorites menu
+
+Improve FirstRun
+	Clickable menu with icons:
+		select consoles
+		emulator association with mimetype
+
+MAX_ROMS should be equal to num_roms (DMA - Dinamyc Memory Allocation)
+
 Put NoFront in background when launch emulators (Do not accept inputs)
-Add support to any emulators refactoring run() (try to enumerate systems)
-Simplify functions from main.h
