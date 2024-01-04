@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <assert.h>
 
 #include "config.h"
 
@@ -79,4 +80,8 @@ int get_game_names() {
 void run() {
 	sprintf(command, "%s \"%s/%s\" >/dev/null 2>&1 &","nopen", RomsDir[idx], game_names[highlight - 1] + strlen(game_names[highlight - 1]) + 1);
 	system(command);
+}
+
+void AddFav(){
+	printf("Not implemented");
 }

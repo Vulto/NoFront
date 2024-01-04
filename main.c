@@ -126,6 +126,10 @@ int main() {
 					run();
 					break;
 
+				case KEY_INSERT: // LAUNCH
+					AddFav();
+					break;
+
 				case KEY_LEFT:
 					if (idx > MinConsoles) {
 						idx--;
