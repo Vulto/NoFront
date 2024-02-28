@@ -19,7 +19,7 @@ static const char *Console[] = {
 	"Saturn"
 };
 
-const char *ext[] = {
+static const char *ext[] = {
 	".smc",
 	".sfc",
 	".fig", 
@@ -33,6 +33,3 @@ const char *ext[] = {
 
 static int MinConsoles = 0;
 static int MaxConsoles = 4;
-
-// To keep track of wich console is on the screen 
-unsigned short int idx = 0;
