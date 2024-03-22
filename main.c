@@ -1,5 +1,4 @@
-#include <ncurses.h>
-#include <stdio.h>
+#include <curses.h>
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,38 +15,21 @@
 #define FOOTER LINES
 
 #define MAX_ROMS 100
-#define MAX_DISPLAY_NAME_LENGTH 256
+#define MAX_DISPLAY_NAME_LENGTH 150
+
+#define DPAD_UP 1
+#define DPAD_DOWN -1
+
+
+int GetGameNames(const char *romsDir, char gameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH]);
+void StripPatternsFromName(char *name, const char *patterns[]);
+void DrawText(char gameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH], int startIdx, int endIdx);
+void HandleJoystick(struct js_event event, char GameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH]);
 
 typedef struct {
     const char *Dir;
     const char *Emulator;
 } Screen;
-
-Screen nes[] = {
-    {"nes", "mednafen"},
-};
-
-Screen snes[] = {
-    {"snes", "mednafen"},
-    {"snes", "mednafen"},
-    {"snes", "mednafen"},
-};
-
-Screen n64[] = {
-    {"n64", "RMG"},
-};
-
-Screen *AllSystems[] = {
-    nes,
-    snes,
-    n64,
-};
-
-static const char *Menu[] = {
-    "Nintendo",
-    "Super Nintendo",
-    "Nintendo 64"
-};
 
 const char *StripPatterns[] = {
     ".smc",
@@ -61,6 +43,17 @@ const char *StripPatterns[] = {
     "nes/"
 };
 
+Screen nes[] = {{"nes", "mednafen"}};
+Screen snes[] = {{"snes", "mednafen"}};
+Screen n64[] = {{"n64", "RMG"}};
+Screen *AllSystems[] = {nes, snes, n64};
+
+static const char *Menu[] = {
+    "Nintendo",
+    "Super Nintendo",
+    "Nintendo 64"
+};
+
 int Title = 0;
 int FirstTitle = 0;
 int LastTitle = (sizeof(Menu) / sizeof(Menu[0])) - 1;
@@ -68,6 +61,29 @@ int highlight = 0;
 int FirstName = 2;
 
 int RomsCount = 0;
+int startIdx = 0;  // Start index for visible options
+
+int main() {
+    initscr();
+    cbreak();
+    curs_set(0);
+    clear();
+
+    char GameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH];  // Game names for each system
+
+    int GamepadFd = open("/dev/input/js0", O_RDONLY);
+    struct js_event event;
+
+    while (1) {
+        read(GamepadFd, &event, sizeof(event));
+
+        DrawText(GameNames, startIdx, startIdx + LINES - FirstName - 1);
+        HandleJoystick(event, GameNames);
+    }
+
+    endwin();
+    return EXIT_SUCCESS;
+}
 
 int GetGameNames(const char *romsDir, char gameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH]) {
     DIR *dir = opendir(romsDir);
@@ -81,7 +97,6 @@ int GetGameNames(const char *romsDir, char gameNames[MAX_ROMS][MAX_DISPLAY_NAME_
     int romsCount = 0;
 
     while ((ent = readdir(dir)) != NULL && romsCount < MAX_ROMS) {
-        // Skip entries for "." and ".."
         if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0) {
             continue;
         }
@@ -101,7 +116,6 @@ int GetGameNames(const char *romsDir, char gameNames[MAX_ROMS][MAX_DISPLAY_NAME_
 }
 
 void StripPatternsFromName(char *name, const char *patterns[]) {
-    
     for (int i = 0; patterns[i] != NULL; i++) {
         char *match = strstr(name, patterns[i]);
         while (match != NULL) {
@@ -112,7 +126,7 @@ void StripPatternsFromName(char *name, const char *patterns[]) {
     }
 }
 
-void DrawText(char gameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH]) {
+void DrawText(char gameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH], int startIdx, int endIdx) {
     int CENTER = (COLS / 2 - strlen(Menu[Title]) / 2);
 
     clear();
@@ -123,67 +137,66 @@ void DrawText(char gameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH]) {
     Screen *currentSystem = AllSystems[Title];
     RomsCount = GetGameNames(currentSystem->Dir, gameNames);
 
+    if (endIdx >= RomsCount) endIdx = RomsCount - 2;
+
     // PRINT TITLES
-    for (int i = 0; i < RomsCount; i++) {
+    for (int i = startIdx; i <= endIdx; i++) {
         char formattedName[MAX_DISPLAY_NAME_LENGTH];
         strcpy(formattedName, gameNames[i]);
         StripPatternsFromName(formattedName, StripPatterns);
 
-        // Calculate center position after stripping characters
         int CENTERNAMES = (COLS / 2 - (strlen(formattedName) / 2));
 
         if (i == highlight) {
-            attron(A_BOLD);
-            mvprintw(FirstName + i, CENTERNAMES, "%s", formattedName);
-            attroff(A_BOLD);
+            attron(A_REVERSE);
+            mvprintw(FirstName + i - startIdx, CENTERNAMES, "%s", formattedName);
+            attroff(A_REVERSE);
         } else {
-            mvprintw(FirstName + i, CENTERNAMES, "%s", formattedName);
+            mvprintw(FirstName + i - startIdx, CENTERNAMES, "%s", formattedName);
         }
     }
 
     refresh();
 }
-void Joystick(struct js_event event, char GameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH]) {
+
+void HandleJoystick(struct js_event event, char GameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH]) {
     switch (event.type) {
         case JS_EVENT_AXIS:
             switch (event.number) {
-                case X_AXIS:
+                case X_AXIS:init_pair(1, COLOR_WHITE, COLOR_BLUE); 
                     if (event.value < 0) {
                         // Changing system with Left
                         if (Title > FirstTitle) {
                             Title--;
                             highlight = 0;  // Reset highlight when changing system
+                            startIdx = 0;
                         }
                     } else if (event.value > 0) {
                         // Changing system with Right
                         if (Title < LastTitle) {
                             Title++;
                             highlight = 0;  // Reset highlight when changing system
+                            startIdx = 0;
                         }
                     }
                     break;
                 case Y_AXIS:
-                    if (event.value < 0) {
-                        // Move highlight up
-                        if (highlight > 0) {
-                            highlight--;
-                        } else {
-                            // Wrap to the bottom if at the top
-                            highlight = RomsCount - 1;
+                    if (event.value > 0 && highlight < RomsCount - 1) {
+                        highlight++;
+                        if (highlight > LINES - 3 + startIdx) {
+                            startIdx++;
                         }
-                    } else if (event.value > 0) {
-                        // Move highlight down
-                        if (highlight < RomsCount - 1) {
-                            highlight++;
-                        } else {
-                            // Wrap to the top if at the bottom
-                            highlight = 0;
+                    }
+                    if (event.value < 0 && highlight > 0 ) {
+                        highlight--;
+                        if(highlight < startIdx) {
+                            startIdx--;
                         }
                     }
                     break;
             }
             break;
-            case JS_EVENT_BUTTON:
+        case JS_EVENT_BUTTON:
             if (event.number == 4 && event.value == 1) {
                 // Launch highlighted game with the associated emulator
                 Screen *currentSystem = AllSystems[Title];
@@ -197,25 +210,4 @@ void Joystick(struct js_event event, char GameNames[MAX_ROMS][MAX_DISPLAY_NAME_L
             }
             break;
     }
-}
-
-int main() {
-    initscr();
-    cbreak();
-    curs_set(0);
-    clear();
-
-    char GameNames[MAX_ROMS][MAX_DISPLAY_NAME_LENGTH];  // Game names for each system
-
-    int GamepadFd = open("/dev/input/js0", O_RDONLY);
-    struct js_event event;
-
-    while (1) {
-        read(GamepadFd, &event, sizeof(event));
-        DrawText(GameNames);
-        Joystick(event, GameNames);
-    }
-
-    endwin();
-    return EXIT_SUCCESS;
 }
