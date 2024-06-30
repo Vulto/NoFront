@@ -2,7 +2,7 @@
 #include "./nobuild.h"
 
 #define SOURCE "main.c"
-#define BIN "nf"
+#define BIN "../menu"
 #define CC "clang"
 #define PREFIX "/usr/local/bin/"
 #define OLD "c.old"
@@ -39,7 +39,7 @@ void Wipe(void) {
 void test(void) {
     Compile();
     Link();
-    CMD("./"BIN);
+    CMD("../menu");
 }
 
 int main(int argc, char *argv[]) {
