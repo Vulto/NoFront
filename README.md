@@ -9,11 +9,6 @@ No Front Menu is a simple program written in C that allows you to browse and lau
 - Allows navigation through the ROM list using arrow keys or a gamepad (D-pad).
 - Launches selected ROMs using emulators.
 
-### Thanks to Alexey Kuterpov (Tsoding) for develop Nobuild header
- Alexey Kutepov <reximkut@gmail.com>
- http://github.com/tsoding/nobuild
-
-
 ## Requirements
 
 To compile and run the NoFront program, you need to have the following dependencies installed:
@@ -46,7 +41,9 @@ To compile and run the NoFront program, you need to have the following dependenc
 - To add or modify ROMs for each gaming console, update the ROM directory paths in the `system/console.h` file (`RomsDir` array).
 - You can customize the supported gaming consoles and their names by modifying the `Console` array in the `main.h` file.
 
-
+### Thanks to Alexey Kuterpov (Tsoding) for develop Nobuild header
+ Alexey Kutepov <reximkut@gmail.com>
+ http://github.com/tsoding/nobuild
 
 ## License
 
