@@ -4,12 +4,12 @@ No Front Menu is a simple program written in C that allows you to browse and lau
 
 ## Features
 
-- Supports multiple gaming consoles: Nintendo, Super Nintendo, and Nintendo 64.
-- Displays a menu of available ROMs for the selected console.
+- Supports multiple consoles.
+- Display a menu of available ROMs for the selected console.
 - Allows navigation through the ROM list using arrow keys or a gamepad (D-pad).
-- Launches selected ROMs using the Mednafen emulator.
+- Launches selected ROMs using emulators.
 
-## Big thanks to Alexey Kuterpov (Tsoding) for develop Nobuild header
+### Thanks to Alexey Kuterpov (Tsoding) for develop Nobuild header
  Alexey Kutepov <reximkut@gmail.com>
  http://github.com/tsoding/nobuild
 
@@ -20,13 +20,10 @@ To compile and run the NoFront program, you need to have the following dependenc
 
 - C Compiler (e.g., GCC)
 - Ncurses library
-- Mednafen emulator
 
 ## Compilation
 
 ./c
-
-Ensure that the Mednafen emulator is installed and accessible in your system's PATH.
 
 ## Usage
 
@@ -46,7 +43,7 @@ Ensure that the Mednafen emulator is installed and accessible in your system's P
 
 ## Customization
 
-- To add or modify ROMs for each gaming console, update the ROM directory paths in the `main.h` file (`RomsDir` array).
+- To add or modify ROMs for each gaming console, update the ROM directory paths in the `system/console.h` file (`RomsDir` array).
 - You can customize the supported gaming consoles and their names by modifying the `Console` array in the `main.h` file.
 
 
