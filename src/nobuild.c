@@ -3,12 +3,11 @@
 
 #define SOURCE "main.c"
 #define BIN "../menu"
-#define CC "clang"
 #define PREFIX "/usr/local/bin/"
 #define OLD "c.old"
 #define CFLAGS  "-Wall",                    \
                 "-Wextra",                  \
-                "-Wall-errors",             \
+                "-Wfatal-errors",           \
                 "-std=c2x",                 \
                 "-pedantic",                \
                 "-pedantic-errors",         \
@@ -19,12 +18,17 @@
 
 #define LIBS    "-lncurses"
 
+char *cc(void){
+    char *result = getenv("CC");
+    return result ? result : "cc";
+}
+
 void Compile(void) {
-    CMD(CC, "-c", SOURCE);
+    CMD(cc(), "-c", SOURCE);
 }
 
 void Link(void) {
-    CMD(CC, "-o", BIN, "main.o", CFLAGS, LIBS);
+    CMD(cc(), "-o", BIN, "main.o", CFLAGS, LIBS);
 }
 
 void Install(void) {

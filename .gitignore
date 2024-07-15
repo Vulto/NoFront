@@ -7,5 +7,9 @@ nf
 # Ignore log files
 *.log
 
+#No binaries
+*.bin
+*.elf
+
 # Ignore a specific directory
-roms/
+systems/

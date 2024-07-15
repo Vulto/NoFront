@@ -12,7 +12,6 @@ bool Running = true;
 int hovered = 0;
 int firstLine = 0;
 int systemIndex = 0;
-int numConsoles = 0;
 int joystick_fd;
 
 const Game *games;
@@ -34,7 +33,7 @@ const char *Systems[] = {
     "Nintendo 64",
 };
 
-int Num_Folders = sizeof(Systems) / sizeof(Systems[0]);
+int Num_Folders = (sizeof(Systems) / sizeof(Systems[0]) -1);
 
 void DrawText(const char *consoleName) {
     if (consoleName == NULL) return;
@@ -57,7 +56,7 @@ void DrawText(const char *consoleName) {
         if (i == hovered) {
             attron(A_BOLD);
         }
-        mvprintw(i - firstLine + 2, imiddle, "%s", games[i].pretty_name);
+        mvprintw(i - firstLine + 2, 0, "%s", games[i].pretty_name);
         if (i == hovered) {
             attroff(A_BOLD);
         }
@@ -123,7 +122,7 @@ void UseKeyboard() {
             }
             break;
         case KEY_RIGHT:
-            if (systemIndex < Num_Folders - 1) {
+            if (systemIndex < Num_Folders) {
                 systemIndex++;
             } else {
                 systemIndex = 0;
@@ -135,7 +134,7 @@ void UseKeyboard() {
             if (systemIndex > 0) {
                 systemIndex--;
             } else {
-                systemIndex = Num_Folders - 1;
+                systemIndex = Num_Folders;
             }
             hovered = 0;
             firstLine = 0;
@@ -183,7 +182,7 @@ void UseJoystick() {
 
             if (event.number == X_AXIS) {
                 if (event.value > 0) {
-                    if (systemIndex < Num_Folders - 1) {
+                    if (systemIndex < Num_Folders ) {
                         systemIndex++;
                     } else {
                         systemIndex = 0;
@@ -193,7 +192,7 @@ void UseJoystick() {
                     if (systemIndex > 0) {
                         systemIndex--;
                     } else {
-                        systemIndex = Num_Folders - 1;
+                        systemIndex = Num_Folders ;
                     }
                 }
                 hovered = 0;
